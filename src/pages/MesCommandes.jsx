@@ -9,8 +9,7 @@ import { useAuth } from '../context/AuthContext';
 import { formatPrice } from '../utils/formatPrice';
 import './MesCommandes.css';
 
-// const API_URL = 'http://localhost:3001/api';
-const API_URL = `${import.meta.env.VITE_API_URL}/api`;
+ const API_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 const statutLabel = {
   en_attente:     { label: 'En attente',     color: 'amber' },
