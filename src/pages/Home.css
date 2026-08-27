@@ -1,0 +1,166 @@
+/* ============================================================
+   TechShop - Home
+   ============================================================ */
+
+/* ---- Hero ------------------------------------------------- */
+.hero {
+  background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 60%, #312E81 100%);
+  color: white;
+  padding: 5rem 0 4rem;
+  overflow: hidden;
+}
+.hero__content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+.hero__text { max-width: 540px; }
+.hero__tag {
+  display: inline-block;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  padding: .35rem .9rem;
+  border-radius: 20px;
+  font-size: .85rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+}
+.hero__text h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 1.1rem;
+}
+.hero__text h1 span {
+  background: linear-gradient(90deg, #60A5FA, #A78BFA);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero__text p { font-size: 1.1rem; opacity: .85; line-height: 1.7; margin-bottom: 2rem; }
+.hero__btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+.hero__btns .btn-outline { border-color: rgba(255,255,255,.4); color: white; }
+.hero__btns .btn-outline:hover { background: rgba(255,255,255,.15); }
+
+/* Hero visual */
+.hero__visual {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.hero__visual img {
+  width: 100%;
+  max-width: 460px;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.4);
+}
+.hero__float-card {
+  position: absolute;
+  background: white;
+  color: var(--dark);
+  padding: .6rem 1rem;
+  border-radius: 12px;
+  font-size: .85rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-lg);
+  white-space: nowrap;
+}
+.hero__float-card--1 { top: 10%; left: -5%; animation: fadeIn 1s .5s both; }
+.hero__float-card--2 { bottom: 12%; right: -2%; animation: fadeIn 1s .8s both; }
+
+/* ---- Advantages ------------------------------------------- */
+.advantages { padding: 1.8rem 0; background: var(--gray-100); }
+.advantages__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+.advantage-card {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  padding: 1.1rem;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.advantage-icon { font-size: 2rem; flex-shrink: 0; }
+.advantage-card h4 { font-size: .95rem; font-weight: 700; margin-bottom: .15rem; }
+.advantage-card p  { font-size: .82rem; color: var(--gray-600); }
+
+/* ---- Categories ------------------------------------------- */
+.section-categories { padding: 4rem 0 3rem; }
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.2rem;
+}
+.category-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .7rem;
+  padding: 1.8rem 1rem;
+  background: white;
+  border-radius: var(--radius);
+  border: 2px solid var(--gray-200);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.category-card:hover {
+  border-color: var(--cat-color, var(--primary));
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+}
+.category-card__icon  { font-size: 2.4rem; }
+.category-card__label {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--dark);
+  text-align: center;
+}
+
+/* ---- Featured products ------------------------------------ */
+.section-featured { padding: 1rem 0 3rem; }
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.4rem;
+}
+.section-cta { text-align: center; margin-top: 2.5rem; }
+
+/* ---- Promo banner ----------------------------------------- */
+.promo-banner {
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  color: white;
+  margin-top: 4rem;
+  padding: 3rem 0;
+}
+.promo-banner__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.promo-banner h2 { font-size: 1.8rem; font-weight: 800; margin-bottom: .4rem; }
+.promo-banner p  { opacity: .88; }
+.promo-banner .btn-primary { background: white; color: var(--primary); font-weight: 700; }
+.promo-banner .btn-primary:hover { background: var(--gray-100); }
+
+/* ---- Responsive ------------------------------------------- */
+@media (max-width: 1024px) {
+  .hero__content     { grid-template-columns: 1fr; text-align: center; }
+  .hero__visual      { display: none; }
+  .hero__text        { max-width: 100%; }
+  .categories-grid   { grid-template-columns: repeat(3, 1fr); }
+  .products-grid     { grid-template-columns: repeat(2, 1fr); }
+  .advantages__grid  { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .hero__text h1     { font-size: 2.2rem; }
+  .categories-grid   { grid-template-columns: repeat(2, 1fr); }
+  .products-grid     { grid-template-columns: 1fr; }
+  .advantages__grid  { grid-template-columns: 1fr; }
+  .promo-banner__inner { flex-direction: column; text-align: center; }
+}

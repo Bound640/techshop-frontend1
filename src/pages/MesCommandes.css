@@ -1,0 +1,63 @@
+/* ============================================================
+   TechShop - Mes Commandes
+   ============================================================ */
+
+.mes-commandes { padding: 2rem 0 4rem; }
+.mc-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 1.8rem; }
+
+.mc-list { display: flex; flex-direction: column; gap: 1.2rem; }
+
+.mc-card {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 1.4rem;
+}
+
+.mc-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+.mc-numero { font-weight: 700; font-size: .95rem; }
+.mc-date   { font-size: .82rem; color: var(--gray-400); }
+
+.mc-statut {
+  padding: .3rem .8rem;
+  border-radius: 20px;
+  font-size: .78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.mc-statut--amber  { background: #FEF3C7; color: #92400E; }
+.mc-statut--blue   { background: #DBEAFE; color: #1D4ED8; }
+.mc-statut--purple { background: #EDE9FE; color: #6D28D9; }
+.mc-statut--green  { background: #D1FAE5; color: #065F46; }
+.mc-statut--red    { background: #FEE2E2; color: #991B1B; }
+
+.mc-card__items { display: flex; flex-direction: column; gap: .6rem; margin-bottom: 1rem; }
+.mc-item { display: flex; align-items: center; gap: .7rem; font-size: .88rem; }
+.mc-item img { width: 42px; height: 42px; border-radius: 6px; object-fit: cover; flex-shrink: 0; background: var(--gray-100); }
+.mc-item-name { flex: 1; color: var(--dark); font-weight: 500; }
+.mc-item-qty  { color: var(--gray-400); }
+.mc-item-price{ font-weight: 700; color: var(--primary); min-width: 80px; text-align: right; }
+
+.mc-card__footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-200);
+  font-size: 1rem;
+}
+.mc-card__footer strong { color: var(--primary); font-size: 1.15rem; }
+
+.spinner-lg {
+  width: 36px; height: 36px;
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
