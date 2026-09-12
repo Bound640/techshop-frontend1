@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import RouteProtegee from './components/ProtectedRoute';
 
 
@@ -33,6 +33,22 @@ const NotFound = () => (
   </div>
 );
 
+// Page d'accueil : connexion en premier (comme Instagram) —
+// si déjà connecté, on entre directement dans l'application
+const AccueilOuConnexion = () => {
+  const { estConnecte, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="page-loader">
+        <span className="spinner" style={{ width: 32, height: 32, borderWidth: 3, borderTopColor: '#2563EB', borderColor: '#E5E7EB' }} />
+      </div>
+    );
+  }
+
+  return estConnecte ? <Home /> : <Connexion />;
+};
+
 const App = () => {
   return (
     <BrowserRouter>
@@ -41,7 +57,7 @@ const App = () => {
           <div className="app">
             <Navbar />
             <Routes>
-              <Route path="/"               element={<Home />} />
+              <Route path="/"               element={<AccueilOuConnexion />} />
               <Route path="/produits"       element={<Products />} />
               <Route path="/produits/:id"   element={<ProductDetail />} />
               <Route path="/panier"         element={<Cart />} />
