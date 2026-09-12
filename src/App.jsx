@@ -1,12 +1,8 @@
-// ============================================================
-// TechShop - Application principale & Routage
-// Fichier : src/App.js
-// ============================================================
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider } from './context/AuthContext';
 import RouteProtegee from './components/ProtectedRoute';
+
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -14,9 +10,15 @@ import Home          from './pages/Home';
 import Products      from './pages/Products';
 import ProductDetail from './pages/ProductDetail';
 import Cart          from './pages/Cart';
+import Profil from './pages/Profil';
 import Connexion     from './pages/Connexion';
 import Inscription   from './pages/Inscription';
 import MesCommandes  from './pages/MesCommandes';
+import MotDePasseOublie from './pages/MotDePasseOublie';
+import ReinitialiserMotDePasse from './pages/ReinitialiserMotDePasse';
+import Admin from './pages/Admin';
+import Support from './pages/Support';
+import Favoris from './pages/Favoris';
 import './styles/global.css';
 
 // Page 404
@@ -45,9 +47,23 @@ const App = () => {
               <Route path="/panier"         element={<Cart />} />
               <Route path="/connexion"      element={<Connexion />} />
               <Route path="/inscription"    element={<Inscription />} />
+              <Route path="/mot-de-passe-oublie" element={<MotDePasseOublie />} />
+              <Route path="/reinitialiser-mot-de-passe/:token" element={<ReinitialiserMotDePasse />} />
+              <Route path="/support"        element={<Support />} />
+              <Route
+                path="/favoris"
+                element={<RouteProtegee><Favoris /></RouteProtegee>}
+              />
+            
+<Route path="/profil" element={<RouteProtegee><Profil /></RouteProtegee>} />
               <Route
                 path="/mes-commandes"
                 element={<RouteProtegee><MesCommandes /></RouteProtegee>}
+                
+              />
+              <Route
+                path="/admin"
+                element={<RouteProtegee adminRequis><Admin /></RouteProtegee>}
               />
               <Route path="*"               element={<NotFound />} />
             </Routes>

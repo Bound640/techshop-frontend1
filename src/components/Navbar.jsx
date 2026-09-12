@@ -1,8 +1,3 @@
-// ============================================================
-// TechShop - Barre de navigation (avec authentification)
-// Fichier : src/components/Navbar.js
-// ============================================================
-
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -130,6 +125,7 @@ const Navbar = () => {
                       <Link to="/admin" onClick={() => setUserMenuOpen(false)}>📊 Tableau de bord</Link>
                     )}
                     <Link to="/mes-commandes" onClick={() => setUserMenuOpen(false)}>📦 Mes commandes</Link>
+                    <Link to="/favoris" onClick={() => setUserMenuOpen(false)}>❤️ Mes favoris</Link>
                   </div>
                   <button className="user-logout-btn" onClick={handleLogout}>
                     🚪 Se déconnecter
@@ -164,7 +160,8 @@ const Navbar = () => {
           <>
             {estAdmin && <Link to="/admin" className="mobile-link">📊 Tableau de bord</Link>}
             <Link to="/mes-commandes" className="mobile-link">📦 Mes commandes</Link>
-            <button className="mobile-link mobile-logout" onClick={handleLogout}>
+            <Link to="/favoris" className="mobile-link">❤️ Mes favoris</Link>
+            <button className="mobile-link mobile-link--logout" onClick={() => { deconnecter(); setMenuOpen(false); }}>
               🚪 Se déconnecter ({user.prenom})
             </button>
           </>

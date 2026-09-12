@@ -1,25 +1,40 @@
-// ============================================================
-// TechShop - Panier d'achat
-// Fichier : src/pages/Cart.js
-// ============================================================
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../utils/api';
+import { messageErreurApi } from '../utils/apiError';
 import { formatPrice, SEUIL_LIVRAISON_GRATUITE } from '../utils/formatPrice';
 import './Cart.css';
 
 const Cart = () => {
   const navigate = useNavigate();
+  const { estConnecte, user, fetchAuth } = useAuth();
   const {
     items, totalItems, subtotal, shipping, tva, total,
     freeShippingLeft, removeFromCart, updateQty, clearCart
   } = useCart();
 
   const [orderDone, setOrderDone] = useState(false);
+  const [numeroCommande, setNumeroCommande] = useState('');
   const [form, setForm]           = useState({ nom: '', email: '', adresse: '', ville: '' });
   const [errors, setErrors]       = useState({});
   const [step, setStep]           = useState(1); // 1=panier, 2=livraison, 3=confirmation
+  const [loading, setLoading]     = useState(false);
+  const [apiErr, setApiErr]       = useState('');
+
+  // Pré-remplir avec les infos du compte connecté
+  useEffect(() => {
+    if (user) {
+      setForm(f => ({
+        ...f,
+        nom: f.nom || `${user.prenom || ''} ${user.nom || ''}`.trim(),
+        email: f.email || user.email || '',
+        adresse: f.adresse || user.adresse?.rue || '',
+        ville: f.ville || user.adresse?.ville || '',
+      }));
+    }
+  }, [user]);
 
   // ---- Validation formulaire ----
   const validate = () => {
@@ -32,11 +47,51 @@ const Cart = () => {
     return Object.keys(e).length === 0;
   };
 
-  const handleOrder = () => {
+  const allerVersLivraison = () => {
+    if (!estConnecte) {
+      navigate('/connexion', { state: { from: '/panier' } });
+      return;
+    }
+    setStep(2);
+  };
+
+  const handleOrder = async () => {
     if (!validate()) return;
-    clearCart();
-    setOrderDone(true);
-    setStep(3);
+    setLoading(true);
+    setApiErr('');
+    try {
+      const payload = {
+        articles: items.map(item => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+        })),
+        adresseLivraison: {
+          nom: form.nom,
+          email: form.email,
+          rue: form.adresse,
+          ville: form.ville,
+          codePostal: '',
+          pays: 'Sénégal',
+        },
+        modePaiement: 'a_la_livraison',
+      };
+      const res  = await fetchAuth(`${API_URL}/commandes`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Erreur lors de la création de la commande.');
+
+      setNumeroCommande(data.commande?.numero || '');
+      clearCart();
+      setOrderDone(true);
+      setStep(3);
+    } catch (err) {
+      setApiErr(messageErreurApi(err));
+    } finally {
+      setLoading(false);
+    }
   };
 
   // ---- Confirmation ----
@@ -46,8 +101,9 @@ const Cart = () => {
         <div className="confirm-card">
           <div className="confirm-icon">🎉</div>
           <h1>Commande confirmée !</h1>
+          {numeroCommande && <p className="confirm-numero">N° de commande : <strong>{numeroCommande}</strong></p>}
           <p>Merci pour votre achat, <strong>{form.nom}</strong>.</p>
-          <p>Un email de confirmation a été envoyé à <strong>{form.email}</strong>.</p>
+          <p>Un récapitulatif est disponible dans <Link to="/mes-commandes">Mes commandes</Link>.</p>
           <p className="confirm-delivery">📦 Livraison prévue à <strong>{form.ville}</strong> sous 3-5 jours ouvrés.</p>
           <button className="btn btn-primary btn-lg" onClick={() => navigate('/')}>
             Retour à l'accueil
@@ -84,6 +140,8 @@ const Cart = () => {
           </div>
         ))}
       </div>
+
+      {apiErr && <div className="auth-alert auth-alert--error" style={{ marginBottom: '1rem' }}>⚠️ {apiErr}</div>}
 
       <div className="cart-layout">
 
@@ -196,7 +254,7 @@ const Cart = () => {
               <span>{formatPrice(subtotal)}</span>
             </div>
             <div className="summary-line">
-              <span>TVA (20%)</span>
+              <span>TVA (18%)</span>
               <span>{formatPrice(tva)}</span>
             </div>
             <div className="summary-line">
@@ -213,13 +271,13 @@ const Cart = () => {
           </div>
 
           {step === 1 && (
-            <button className="btn btn-primary btn-full btn-lg" onClick={() => setStep(2)}>
+            <button className="btn btn-primary btn-full btn-lg" onClick={allerVersLivraison}>
               Passer la commande →
             </button>
           )}
           {step === 2 && (
-            <button className="btn btn-primary btn-full btn-lg" onClick={handleOrder}>
-              ✅ Confirmer la commande
+            <button className="btn btn-primary btn-full btn-lg" onClick={handleOrder} disabled={loading}>
+              {loading ? 'Envoi en cours...' : '✅ Confirmer la commande'}
             </button>
           )}
 

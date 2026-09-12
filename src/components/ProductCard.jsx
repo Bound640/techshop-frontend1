@@ -1,12 +1,9 @@
-// ============================================================
-// TechShop - Carte produit réutilisable
-// Fichier : src/components/ProductCard.js
-// ============================================================
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { formatPrice } from '../utils/formatPrice';
+import { API_URL } from '../utils/api';
 import './ProductCard.css';
 
 const Stars = ({ rating }) => {
@@ -31,14 +28,32 @@ const badgeColor = {
 
 const ProductCard = ({ product }) => {
   const { addToCart, isInCart } = useCart();
+  const { estConnecte, fetchAuth, user, majUtilisateur } = useAuth();
   const [added, setAdded] = useState(false);
   const [imgError, setImgError] = useState(false);
+
+  const estFavori = user?.favoris?.some((fid) => String(fid) === String(product.id)) || false;
 
   const handleAdd = (e) => {
     e.preventDefault(); // ne pas naviguer vers la fiche
     addToCart(product);
     setAdded(true);
     setTimeout(() => setAdded(false), 1400);
+  };
+
+  const handleFavori = async (e) => {
+    e.preventDefault();
+    if (!estConnecte) return;
+    try {
+      const res  = await fetchAuth(`${API_URL}/auth/favoris/${product.id}`, { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        const nouveaux = data.estFavori
+          ? [...(user.favoris || []), product.id]
+          : (user.favoris || []).filter((fid) => String(fid) !== String(product.id));
+        majUtilisateur({ ...user, favoris: nouveaux });
+      }
+    } catch { /* silencieux */ }
   };
 
   const inCart = isInCart(product.id);
@@ -50,6 +65,16 @@ const ProductCard = ({ product }) => {
         <span className={`badge ${badgeColor[product.badge] || 'badge-blue'} product-card__badge`}>
           {product.badge}
         </span>
+      )}
+
+      {estConnecte && (
+        <button
+          className={`product-card__fav ${estFavori ? 'active' : ''}`}
+          onClick={handleFavori}
+          aria-label={estFavori ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+        >
+          {estFavori ? '❤️' : '🤍'}
+        </button>
       )}
 
       {/* Image */}
@@ -74,6 +99,9 @@ const ProductCard = ({ product }) => {
 
         <div className="product-card__footer">
           <p className="product-card__price">
+            {product.enPromo && (
+              <span className="product-card__price-old">{formatPrice(product.originalPrice)}</span>
+            )}
             {formatPrice(product.price)}
           </p>
 

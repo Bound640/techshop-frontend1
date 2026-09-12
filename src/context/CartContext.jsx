@@ -1,8 +1,3 @@
-// ============================================================
-// TechShop - Gestion globale du panier
-// Fichier : src/context/CartContext.js
-// ============================================================
-
 import { createContext, useContext, useReducer, useEffect } from 'react';
 import { SEUIL_LIVRAISON_GRATUITE, FRAIS_LIVRAISON, TAUX_TVA } from '../utils/formatPrice';
 

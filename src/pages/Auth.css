@@ -1,7 +1,3 @@
-/* ============================================================
-   TechShop - Pages Auth (Connexion / Inscription)
-   ============================================================ */
-
 .auth-page {
   min-height: calc(100vh - 68px);
   display: flex;
@@ -135,4 +131,13 @@
 @media (max-width: 480px) {
   .auth-card { padding: 1.8rem 1.4rem; }
   .form-row  { grid-template-columns: 1fr; }
+}
+
+/* ---- Lien mot de passe oublié ------------------------------ */
+.auth-forgot-link {
+  text-align: right;
+  margin-top: .4rem;
+}
+.auth-forgot-link .auth-link {
+  font-size: .85rem;
 }

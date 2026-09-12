@@ -1,8 +1,3 @@
-// ============================================================
-// TechShop - Pied de page
-// Fichier : src/components/Footer.js
-// ============================================================
-
 import { Link } from 'react-router-dom';
 import './Footer.css';
 
@@ -51,6 +46,9 @@ const Footer = () => {
             <li>📍 ISEP de Thiès, Sénégal</li>
             <li>📞 +221 33 929 26 08</li>
             <li>✉️ techshop@isep-thies.sn</li>
+          </ul>
+          <ul>
+            <li><Link to="/support">📩 Contact & Support</Link></li>
           </ul>
         </div>
       </div>

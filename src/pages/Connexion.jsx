@@ -1,12 +1,8 @@
-// ============================================================
-// TechShop — Page de connexion
-// Fichier : src/pages/Connexion.js
-// ============================================================
-
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
+import { messageErreurApi } from '../utils/apiError';
 
 const Connexion = () => {
   const { connecter } = useAuth();
@@ -47,7 +43,7 @@ const Connexion = () => {
         : (location.state?.from || '/');
       navigate(destination);
     } catch (err) {
-      setApiErr(err.message);
+      setApiErr(messageErreurApi(err));
     } finally {
       setLoading(false);
     }
@@ -112,6 +108,9 @@ const Connexion = () => {
               </button>
             </div>
             {errors.motDePasse && <span className="form-error">⚠ {errors.motDePasse}</span>}
+            <div className="auth-forgot-link">
+              <Link to="/mot-de-passe-oublie" className="auth-link">Mot de passe oublié ?</Link>
+            </div>
           </div>
 
           <button

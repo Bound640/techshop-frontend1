@@ -1,12 +1,8 @@
-// ============================================================
-// TechShop — Page d'inscription
-// Fichier : src/pages/Inscription.js
-// ============================================================
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
+import { messageErreurApi } from '../utils/apiError';
 
 const Inscription = () => {
   const { inscrire } = useAuth();
@@ -50,7 +46,7 @@ const Inscription = () => {
       });
       navigate('/', { state: { toast: `Bienvenue ${form.prenom} ! Compte créé avec succès.` } });
     } catch (err) {
-      setApiErr(err.message);
+      setApiErr(messageErreurApi(err));
     } finally {
       setLoading(false);
     }

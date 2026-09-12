@@ -1,7 +1,3 @@
-/* ============================================================
-   TechShop - Cart Page
-   ============================================================ */
-
 .cart-page { padding: 2rem 0 4rem; }
 
 .cart-title {
@@ -266,4 +262,12 @@
   .form-grid { grid-template-columns: 1fr; }
   .cart-item__subtotal { display: none; }
   .cart-steps { font-size: .78rem; }
+}
+
+.confirm-numero {
+  background: var(--gray-50, #F9FAFB);
+  border-radius: 8px;
+  padding: .6rem 1rem;
+  display: inline-block;
+  margin: .5rem 0;
 }

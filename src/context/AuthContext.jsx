@@ -1,8 +1,3 @@
-// ============================================================
-// TechShop — Contexte d'authentification global
-// Fichier : src/context/AuthContext.js
-// ============================================================
-
 import { createContext, useContext, useState, useEffect } from 'react';
 const API_URL = `${import.meta.env.VITE_API_URL}/api`;
 
@@ -24,12 +19,15 @@ export const AuthProvider = ({ children }) => {
         const data = await res.json();
         if (res.ok && data.success) {
           setUser(data.user);
-        } else {
-          // Token expiré ou invalide → déconnecter
+        } else if (res.status === 401) {
+          // Token réellement invalide/expiré → déconnecter
           deconnecter();
         }
+        // Sinon (ex: 503 base de données indisponible) : on garde la
+        // session locale, le serveur revenant peut-être dans quelques secondes.
       } catch {
-        deconnecter();
+        // Erreur réseau (backend injoignable) : on ne déconnecte pas
+        // l'utilisateur pour un simple problème de connexion temporaire.
       } finally {
         setLoading(false);
       }
@@ -89,6 +87,9 @@ export const AuthProvider = ({ children }) => {
     setUser(usr);
   };
 
+  // ---- Mettre à jour l'utilisateur en mémoire (après édition du profil) ----
+  const majUtilisateur = (usr) => setUser(usr);
+
   const estConnecte = !!user;
   const estAdmin    = user?.role === 'admin';
 
@@ -96,7 +97,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider value={{
       user, token, loading,
       estConnecte, estAdmin,
-      inscrire, connecter, deconnecter, fetchAuth,
+      inscrire, connecter, deconnecter, fetchAuth, majUtilisateur,
     }}>
       {children}
     </AuthContext.Provider>

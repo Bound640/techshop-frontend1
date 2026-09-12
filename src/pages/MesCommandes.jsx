@@ -1,12 +1,8 @@
-// ============================================================
-// TechShop — Historique des commandes du client connecté
-// Fichier : src/pages/MesCommandes.js
-// ============================================================
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { formatPrice } from '../utils/formatPrice';
+import { messageErreurApi } from '../utils/apiError';
 import './MesCommandes.css';
 const API_URL = `${import.meta.env.VITE_API_URL}/api`;
 
@@ -17,6 +13,29 @@ const statutLabel = {
   expediee:       { label: 'Expédiée',       color: 'purple'},
   livree:         { label: 'Livrée',         color: 'green' },
   annulee:        { label: 'Annulée',        color: 'red'   },
+};
+
+const ETAPES = ['en_attente', 'confirmee', 'en_preparation', 'expediee', 'livree'];
+const ETAPES_LABEL = {
+  en_attente: 'Commande passée', confirmee: 'Confirmée',
+  en_preparation: 'En préparation', expediee: 'Expédiée', livree: 'Livrée',
+};
+
+const SuiviCommande = ({ statut }) => {
+  if (statut === 'annulee') {
+    return <p className="mc-cancelled">❌ Cette commande a été annulée.</p>;
+  }
+  const indexActuel = ETAPES.indexOf(statut);
+  return (
+    <div className="mc-suivi">
+      {ETAPES.map((etape, i) => (
+        <div key={etape} className={`mc-suivi-etape ${i <= indexActuel ? 'done' : ''} ${i === indexActuel ? 'current' : ''}`}>
+          <span className="mc-suivi-dot">{i < indexActuel ? '✓' : i === indexActuel ? '●' : '○'}</span>
+          <span className="mc-suivi-label">{ETAPES_LABEL[etape]}</span>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 const MesCommandes = () => {
@@ -33,7 +52,7 @@ const MesCommandes = () => {
         if (!res.ok) throw new Error(data.message);
         setCommandes(data.commandes);
       } catch (err) {
-        setErreur(err.message || 'Erreur lors du chargement des commandes.');
+        setErreur(messageErreurApi(err));
       } finally {
         setLoading(false);
       }
@@ -106,6 +125,8 @@ const MesCommandes = () => {
                 <span>Total</span>
                 <strong>{formatPrice(cmd.total)}</strong>
               </div>
+
+              <SuiviCommande statut={cmd.statut} />
             </div>
           );
         })}

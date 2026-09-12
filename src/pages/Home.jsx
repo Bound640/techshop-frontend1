@@ -1,10 +1,6 @@
-// ============================================================
-// TechShop - Page d'accueil
-// Fichier : src/pages/Home.js
-// ============================================================
-
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { categories, getFeaturedProducts } from '../data/products';
+import { API_URL, adapterProduit, adapterCategorie } from '../utils/api';
 import { formatPrice, SEUIL_LIVRAISON_GRATUITE } from '../utils/formatPrice';
 import ProductCard from '../components/ProductCard';
 import './Home.css';
@@ -18,7 +14,28 @@ const advantages = [
 
 const Home = () => {
   const navigate  = useNavigate();
-  const featured  = getFeaturedProducts();
+  const [categories, setCategories] = useState([]);
+  const [featured, setFeatured]     = useState([]);
+  const [loading, setLoading]       = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const [resCats, resFeatured] = await Promise.all([
+          fetch(`${API_URL}/categories`),
+          fetch(`${API_URL}/produits/vedettes`),
+        ]);
+        const dataCats     = await resCats.json();
+        const dataFeatured = await resFeatured.json();
+        setCategories((dataCats.categories || []).map(adapterCategorie));
+        setFeatured((dataFeatured.produits || []).map(adapterProduit));
+      } catch {
+        // Silencieux : la page reste utilisable même si l'API est indisponible un instant
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
   return (
     <main className="home">
@@ -27,7 +44,7 @@ const Home = () => {
       <section className="hero">
         <div className="hero__content container">
           <div className="hero__text fade-in">
-            <span className="hero__tag">🔥 Nouveautés 2025</span>
+            <span className="hero__tag">🔥 Nouveautés 2026</span>
             <h1>La technologie<br /><span>à portée de main</span></h1>
             <p>
               Découvrez notre sélection de smartphones, ordinateurs, casques et montres
@@ -37,8 +54,8 @@ const Home = () => {
               <button className="btn btn-primary btn-lg" onClick={() => navigate('/produits')}>
                 🛍️ Voir le catalogue
               </button>
-              <button className="btn btn-outline btn-lg" onClick={() => navigate('/produits?cat=smartphones')}>
-                Smartphones →
+              <button className="btn btn-outline btn-lg" onClick={() => navigate('/produits?cat=telephones')}>
+                Téléphones →
               </button>
             </div>
           </div>
@@ -80,7 +97,6 @@ const Home = () => {
             <button
               key={cat.id}
               className="category-card"
-              style={{ '--cat-color': cat.color }}
               onClick={() => navigate(`/produits?cat=${cat.id}`)}
             >
               <span className="category-card__icon">{cat.icon}</span>
@@ -97,9 +113,15 @@ const Home = () => {
           <p>Notre sélection des meilleurs articles du moment</p>
           <div className="title-underline" />
         </div>
-        <div className="products-grid">
-          {featured.map(p => <ProductCard key={p.id} product={p} />)}
-        </div>
+        {!loading && featured.length === 0 ? (
+          <p style={{ textAlign: 'center', color: 'var(--gray-500)' }}>
+            Aucun produit vedette pour le moment.
+          </p>
+        ) : (
+          <div className="products-grid">
+            {featured.map(p => <ProductCard key={p.id} product={p} />)}
+          </div>
+        )}
         <div className="section-cta">
           <button className="btn btn-outline btn-lg" onClick={() => navigate('/produits')}>
             Voir tous les produits →

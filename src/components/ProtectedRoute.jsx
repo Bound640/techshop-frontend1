@@ -1,8 +1,3 @@
-// ============================================================
-// TechShop - Protection de routes (auth requise / admin requis)
-// Fichier : src/components/ProtectedRoute.js
-// ============================================================
-
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 

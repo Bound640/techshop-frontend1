@@ -1,21 +1,14 @@
-// ============================================================
-// TechShop - Formatage des prix en Franc CFA (XOF)
-// Fichier : src/utils/formatPrice.js
-// ============================================================
+// TechShop - Formatage des prix et constantes de commande (Franc CFA - XOF)
 
-// Le Franc CFA (XOF) n'utilise pas de décimales (pas de centimes)
+export const SEUIL_LIVRAISON_GRATUITE = 500000; // livraison gratuite au-delà de 500 000 FCFA
+export const FRAIS_LIVRAISON = 3000;            // frais de livraison standard
+export const TAUX_TVA = 0.18;                   // TVA 18% (Sénégal)
+
 export const formatPrice = (montant) => {
-  return new Intl.NumberFormat('fr-FR', {
+  const valeur = Number(montant) || 0;
+  return new Intl.NumberFormat('fr-SN', {
     style: 'currency',
     currency: 'XOF',
-    minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(montant);
+  }).format(valeur);
 };
-
-// Seuil de livraison gratuite (équivalent à 50€ ≈ 30 000 F CFA)
-export const SEUIL_LIVRAISON_GRATUITE = 30000;
-export const FRAIS_LIVRAISON = 2500; // ≈ 4,99€
-
-// Taux de TVA appliqué (Sénégal : 18%)
-export const TAUX_TVA = 0.18;

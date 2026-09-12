@@ -1,7 +1,3 @@
-/* ============================================================
-   TechShop - ProductDetail
-   ============================================================ */
-
 .product-detail { padding: 1.5rem 0 4rem; }
 
 .breadcrumb {
@@ -182,3 +178,47 @@
   .related-grid { grid-template-columns: 1fr; }
   .tabs-nav { flex-wrap: wrap; }
 }
+
+/* ---- Galerie d'images (ajouts) ------------------------------- */
+.detail-gallery { display: flex; flex-direction: column; gap: .75rem; }
+.detail-thumbs { display: flex; gap: .5rem; flex-wrap: wrap; }
+.detail-thumb {
+  width: 64px; height: 64px; border-radius: 10px; overflow: hidden;
+  border: 2px solid transparent; padding: 0; cursor: pointer; background: none;
+}
+.detail-thumb.active { border-color: var(--primary); }
+.detail-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.detail-fav-btn {
+  position: absolute; top: 12px; right: 12px;
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,.9); border: none; cursor: pointer;
+  font-size: 1.3rem; display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15); transition: transform .15s ease;
+}
+.detail-fav-btn:hover { transform: scale(1.1); }
+
+.detail-price-old {
+  text-decoration: line-through; color: var(--gray-400, #9CA3AF);
+  font-size: 1.1rem; margin-right: .6rem; font-weight: 500;
+}
+.detail-promo-badge { margin-left: .75rem; font-size: .85rem; vertical-align: middle; }
+
+/* ---- Avis ------------------------------------------------------ */
+.reviews-section { display: flex; flex-direction: column; gap: 1rem; }
+.review-form {
+  background: var(--gray-50, #F9FAFB); border-radius: 12px; padding: 1.25rem;
+  margin-bottom: .5rem;
+}
+.review-form h4 { margin-bottom: .75rem; }
+.review-form-note { display: flex; gap: .3rem; margin-bottom: .75rem; }
+.review-star-btn {
+  background: none; border: none; font-size: 1.5rem; cursor: pointer;
+  color: var(--gray-300, #D1D5DB);
+}
+.review-star-btn.active { color: var(--accent, #F59E0B); }
+.review-form textarea {
+  width: 100%; padding: .7rem; border-radius: 8px; border: 1px solid var(--gray-200, #E5E7EB);
+  font-family: inherit; margin-bottom: .75rem; resize: vertical;
+}
+.review-login-hint { color: var(--gray-500, #6B7280); margin-bottom: 1rem; }
