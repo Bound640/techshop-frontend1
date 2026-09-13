@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import RouteProtegee from './components/ProtectedRoute';
@@ -49,13 +49,36 @@ const AccueilOuConnexion = () => {
   return estConnecte ? <Home /> : <Connexion />;
 };
 
+// Chemins où la barre de navigation et le pied de page ne doivent PAS
+// s'afficher (écran de connexion/inscription "porte d'entrée", sans les
+// distractions du reste du site — comme Instagram)
+const CHEMINS_SANS_CHROME = ['/connexion', '/inscription', '/mot-de-passe-oublie'];
+
+const Mise_en_page = ({ children }) => {
+  const location = useLocation();
+  const { estConnecte } = useAuth();
+
+  const estCheminAuth =
+    CHEMINS_SANS_CHROME.includes(location.pathname) ||
+    location.pathname.startsWith('/reinitialiser-mot-de-passe');
+  const estAccueilNonConnecte = location.pathname === '/' && !estConnecte;
+  const masquerChrome = estCheminAuth || estAccueilNonConnecte;
+
+  return (
+    <div className="app">
+      {!masquerChrome && <Navbar />}
+      {children}
+      {!masquerChrome && <Footer />}
+    </div>
+  );
+};
+
 const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
         <CartProvider>
-          <div className="app">
-            <Navbar />
+          <Mise_en_page>
             <Routes>
               <Route path="/"               element={<AccueilOuConnexion />} />
               <Route path="/produits"       element={<Products />} />
@@ -70,12 +93,12 @@ const App = () => {
                 path="/favoris"
                 element={<RouteProtegee><Favoris /></RouteProtegee>}
               />
-            
-<Route path="/profil" element={<RouteProtegee><Profil /></RouteProtegee>} />
+
+              <Route path="/profil" element={<RouteProtegee><Profil /></RouteProtegee>} />
               <Route
                 path="/mes-commandes"
                 element={<RouteProtegee><MesCommandes /></RouteProtegee>}
-                
+
               />
               <Route
                 path="/admin"
@@ -83,8 +106,7 @@ const App = () => {
               />
               <Route path="*"               element={<NotFound />} />
             </Routes>
-            <Footer />
-          </div>
+          </Mise_en_page>
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>
